@@ -1,4 +1,5 @@
 import os
+import re
 
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session
@@ -34,8 +35,51 @@ def index():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    # Register the user
-    return render_template('register.html')
+    # Clear active sessions
+    session.clear()
+
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        confirmation = request.form.get('confirmation')
+
+        # Check id forms are blank
+        if not username:
+            return apology('Username in required', 400)
+        
+        elif not password:
+            return apology('Password required', 400)
+        
+        elif not confirmation:
+            return apology('Must confrim password', 400)
+        
+        # Check if password matched
+        elif password != confirmation:
+            return apology('Password did not match')
+        
+        # Check password requirements
+        if len(password) < 8 or not re.search(r"\d", password) or not re.search(r"[A-Z]", password):
+            return apology('Password must be at least 8 characters long and contain at least one capital letter and one number', 400)
+        
+        # Username query
+        user = db.execute('SELECT * FROM users WHERE user = ?', username)
+
+        # Check if the user exist
+        if len(user) != 0:
+            return apology('User already exist', 400)
+        
+        # Adding user to data.db
+        db.execute('INSERT INTO users (user, hash', username, generate_password_hash(password))
+
+        user = db.execute('SELECT * FROM users WHERE user = ?', username)
+
+        # User logged in 
+        session['user_id'] = user[0]['id']
+
+        return redirect('/')
+    
+    else:
+        return render_template('register.html')
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -54,6 +98,7 @@ def login():
         # Ensure password was submitted
         elif not request.form.get("password"):
             return apology("must provide password", 403)
+            
 
         # Query database for username
         rows = db.execute("SELECT * FROM users WHERE username = ?", request.form.get("username"))
