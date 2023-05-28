@@ -62,16 +62,16 @@ def register():
             return apology('Password must be at least 8 characters long and contain at least one capital letter and one number', 400)
         
         # Username query
-        user = db.execute('SELECT * FROM users WHERE user = ?', username)
+        user = db.execute('SELECT * FROM users WHERE username = ?', username)
 
         # Check if the user exist
         if len(user) != 0:
             return apology('User already exist', 400)
         
         # Adding user to data.db
-        db.execute('INSERT INTO users (user, hash', username, generate_password_hash(password))
+        db.execute('INSERT INTO users (username, hash) VALUES (?, ?)', username, generate_password_hash(password))
 
-        user = db.execute('SELECT * FROM users WHERE user = ?', username)
+        user = db.execute('SELECT * FROM users WHERE username = ?', username)
 
         # User logged in 
         session['user_id'] = user[0]['id']
@@ -126,3 +126,19 @@ def logout():
 
     # Redirect user to login form
     return redirect("/")
+
+@app.route('/create', methods=['GET', 'POST'])
+def create():
+    return apology('TODO')
+
+@app.route('/open')
+def open():
+    return apology('TODO')
+
+@app.route('/closed')
+def close():
+    return apology('TODO')
+
+@app.route('/history')
+def history():
+    return apology('TODO')
