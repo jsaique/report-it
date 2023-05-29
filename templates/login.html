@@ -1,6 +1,6 @@
 {% extends "layout.html" %} {% block title %} Login {% endblock %} {% block
 main%}
-<form action="/login" method="post">
+<!-- <form action="/login" method="post">
   <div class="mb-3">
     <input
       autocomplete="off"
@@ -24,5 +24,35 @@ main%}
     />
   </div>
   <button class="btn btn-primary" type="submit">Log in</button>
+</form> -->
+
+<form action="/login" method="post">
+  <div class="mx-auto w-50">
+    <div class="form-floating mb-3">
+      <input
+        autocomplete="off"
+        autofocus
+        class="form-control"
+        id="username"
+        name="username"
+        placeholder="Username"
+        type="text"
+      />
+      <label for="Username">Username</label>
+    </div>
+    <div class="form-floating mb-3">
+      <input
+        autocomplete="off"
+        autofocus
+        class="form-control"
+        id="password"
+        name="password"
+        placeholder="Password"
+        type="password"
+      />
+      <label for="description">Password</label>
+    </div>
+    <button class="btn btn-primary" type="submit">Log in</button>
+  </div>
 </form>
 {% endblock %}

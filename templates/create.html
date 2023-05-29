@@ -1,0 +1,28 @@
+{% extends 'layout.html' %} {% block title %} Create {% endblock %} {% block
+main %}
+<form action="/create" method="post" class="container w-50">
+  <div class="form-floating mb-3">
+    <input type="text" class="form-control" id="issue" placeholder="Issue" />
+    <label for="issue">Issue</label>
+  </div>
+  <div class="form-floating mb-3">
+    <input
+      type="text"
+      class="form-control"
+      id="description"
+      placeholder="Description"
+    />
+    <label for="description">Description</label>
+  </div>
+  <div class="form-floating mb-3">
+    <textarea
+      class="form-control"
+      placeholder="Leave a comment here"
+      id="comments"
+      style="height: 100px"
+    ></textarea>
+    <label for="comments">Comments</label>
+  </div>
+  <button class="btn btn-primary" type="submit">Create+</button>
+</form>
+{% endblock %}

@@ -129,7 +129,7 @@ def logout():
 
 @app.route('/create', methods=['GET', 'POST'])
 def create():
-    return apology('TODO')
+    return render_template('create.html')
 
 @app.route('/open')
 def open():
