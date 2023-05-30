@@ -2,24 +2,36 @@
 main %}
 <form action="/create" method="post" class="container w-50">
   <div class="form-floating mb-3">
-    <input type="text" class="form-control" id="issue" placeholder="Issue" />
+    <input
+      autocomplete="off"
+      autofocus
+      class="form-control"
+      id="issue"
+      name="issue"
+      placeholder="Issue"
+      type="text"
+    />
     <label for="issue">Issue</label>
   </div>
   <div class="form-floating mb-3">
-    <input
-      type="text"
+    <textarea
+      autocomplete="off"
       class="form-control"
-      id="description"
       placeholder="Description"
-    />
+      id="description"
+      name="description"
+      style="height: 200px"
+    ></textarea>
     <label for="description">Description</label>
   </div>
   <div class="form-floating mb-3">
     <textarea
+      autocomplete="off"
       class="form-control"
-      placeholder="Leave a comment here"
+      placeholder="Comments"
       id="comments"
-      style="height: 100px"
+      name="comments"
+      style="height: 200px"
     ></textarea>
     <label for="comments">Comments</label>
   </div>

@@ -31,7 +31,10 @@ def after_request(response):
 @app.route('/')
 @login_required
 def index():
-    return render_template('index.html')
+    # Getting the data issue, description, comments
+    ticket = db.execute('SELECT * FROM tickets WHERE user_id = :user_id', user_id=session['user_id'])
+
+    return render_template('index.html', ticket=ticket)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -129,7 +132,25 @@ def logout():
 
 @app.route('/create', methods=['GET', 'POST'])
 def create():
-    return render_template('create.html')
+    if request.method == 'POST':
+        issue = request.form.get('issue')
+        description = request.form.get('description')
+        comments = request.form.get('comments')
+
+        # Check if input and textarea are blank
+        if not issue:
+            return apology('Issue required', 400)
+        
+        elif not description:
+            return apology('Description required', 400)
+        
+        # Add the ticket to database
+        db.execute('INSERT INTO tickets (user_id, issue, description, comments) VALUES (:user_id, :issue, :description, :comments)', user_id=session['user_id'], issue=issue, description=description, comments=comments)
+        
+        flash(f'A ticket has been created!')
+        return redirect('/')
+    else:
+        return render_template('create.html')
 
 @app.route('/open')
 def open():
