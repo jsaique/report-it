@@ -32,9 +32,11 @@ def after_request(response):
 @login_required
 def index():
     # Getting the data issue, description, comments
-    ticket = db.execute('SELECT * FROM tickets WHERE user_id = :user_id', user_id=session['user_id'])
+    tickets = db.execute('SELECT * FROM tickets WHERE user_id = :user_id', user_id=session['user_id'])
 
-    return render_template('index.html', ticket=ticket)
+    users = db.execute('SELECT username FROM users WHERE id = :id', id=session['user_id'])
+
+    return render_template('index.html', tickets=tickets, users=users)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -152,9 +154,24 @@ def create():
     else:
         return render_template('create.html')
 
-@app.route('/open')
+@app.route('/open', methods=['GET', 'POST'])
 def open():
-    return apology('TODO')
+    # Getting the data issue, description, comments...
+    tickets = db.execute('SELECT * FROM tickets WHERE user_id = :user_id', user_id=session['user_id'])
+
+    return render_template('open.html', tickets=tickets)
+
+@app.route('/update', methods=['GET', 'POST'])
+def update():
+    action = request.form.get('action')
+
+    if action == 'update':
+        return apology('TODO')
+    
+    elif action == 'resolve':
+        return apology('TODO')
+
+    return render_template('update.html')
 
 @app.route('/closed')
 def close():

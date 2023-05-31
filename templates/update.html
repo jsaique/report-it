@@ -1,6 +1,7 @@
-{% extends 'layout.html' %} {% block title %} Create {% endblock %} {% block
+{% extends 'layout.html' %} {% block title %} Update {% endblock %} {% block
 main %}
-<form action="/create" class="container w-50" method="post">
+<h1>Update</h1>
+<form action="/update" class="container w-50" method="post">
   <div class="form-floating mb-3">
     <input
       autocomplete="off"
@@ -8,20 +9,20 @@ main %}
       class="form-control"
       id="issue"
       name="issue"
-      placeholder="Issue"
       type="text"
+      value="TODO"
     />
     <label for="issue">Issue</label>
   </div>
   <div class="form-floating mb-3">
-    <textarea
+    <input
       autocomplete="off"
       class="form-control"
-      placeholder="Description"
       id="description"
       name="description"
-      style="height: 200px"
-    ></textarea>
+      type="text"
+      value="TODO"
+    />
     <label for="description">Description</label>
   </div>
   <div class="form-floating mb-3">
@@ -32,9 +33,15 @@ main %}
       id="comments"
       name="comments"
       style="height: 200px"
+      value="TODO"
     ></textarea>
     <label for="comments">Comments</label>
   </div>
-  <button class="btn btn-primary" type="submit">Create+</button>
+  <button class="btn btn-primary" type="submit" name="action" value="update">
+    Update
+  </button>
+  <button class="btn btn-secondary" type="submit" name="action" value="resolve">
+    Resolve
+  </button>
 </form>
 {% endblock %}

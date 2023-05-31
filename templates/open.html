@@ -1,25 +1,24 @@
-{% extends "layout.html" %} {% block title %} Homepage {% endblock %} {% block
-main %}
-<h1>Tickets</h1>
-
+{% extends 'layout.html' %} {% block title %} Open {% endblock %} {% block main
+%}
+<h1>Open Tickets</h1>
 <table class="table table-bordered table-hover table-stripped">
   <thead class="thead-light">
     <tr class="table-primary">
       <td>Ticket</td>
-      <td>Status</td>
       <td>Created</td>
       <td>Issue</td>
       <td>Description</td>
+      <td>Status</td>
     </tr>
   </thead>
   <tbody>
     {% for ticket in tickets %}
     <tr>
-      <td>{{ ticket.id }}</td>
-      <td>{{ ticket.state.capitalize() }}</td>
+      <td><a href="/update">{{ ticket.id }}</a></td>
       <td>{{ ticket.timestamp }}</td>
       <td>{{ ticket.issue }}</td>
       <td>{{ ticket.description }}</td>
+      <td>{{ ticket.state.capitalize() }}</td>
     </tr>
     {% endfor %}
   </tbody>
