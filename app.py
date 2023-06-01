@@ -193,6 +193,10 @@ def update():
     if request.method == "GET":
         ticket_id = request.args.get("ticket_id")
         tickets = db.execute("SELECT * FROM tickets WHERE id = ?", (ticket_id,))
+        comments = db.execute(
+            "SELECT * FROM comments WHERE ticket_id = ?", (ticket_id,)
+        )
+        return render_template("update.html", tickets=tickets, comments=comments)
 
     action = request.form.get("action")
     ticket_id = request.form.get("ticket_id")
@@ -201,13 +205,13 @@ def update():
         # Get the updated issue, description, and comments from the form
         updated_comments = request.form.get("comments")
 
-        # Update the ticket in the database
+        # Update the ticket's comments in the comments table
         db.execute(
-            "UPDATE tickets SET comments = ? WHERE id = ?",
-            (updated_comments, ticket_id),
+            "INSERT INTO comments (ticket_id, comment) VALUES ?",
+            (updated_comments),
         )
 
-        flash("Ticket updated!")
+        flash("Comment added!!")
         # Redirect to a success page or display a success message
         return redirect("/")
 
