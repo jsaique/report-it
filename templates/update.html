@@ -1,16 +1,32 @@
 {% extends 'layout.html' %} {% block title %} Update {% endblock %} {% block
 main %}
 <h1>Update</h1>
+{% for ticket in tickets %}
+<h2>Ticket {{ticket.id}}</h2>
+<h2>{{ ticket.issue }}</h2>
+<h2>{{ ticket.description }}</h2>
 <form action="/update" class="container w-50" method="post">
   <div class="form-floating mb-3">
     <input
       autocomplete="off"
-      autofocus
+      class="form-control"
+      disabled
+      hidden
+      id="ticket"
+      name="ticket_id"
+      type="text"
+      value="{{ ticket.id }}"
+    />
+    <label hidden for="ticket">Ticket</label>
+  </div>
+  <!-- <div class="form-floating mb-3">
+    <input
+      autocomplete="off"
       class="form-control"
       id="issue"
       name="issue"
       type="text"
-      value="TODO"
+      value="{{ ticket.issue }}"
     />
     <label for="issue">Issue</label>
   </div>
@@ -21,20 +37,21 @@ main %}
       id="description"
       name="description"
       type="text"
-      value="TODO"
+      value="{{ ticket.description }}"
     />
     <label for="description">Description</label>
-  </div>
+  </div> -->
   <div class="form-floating mb-3">
-    <textarea
+    <input
       autocomplete="off"
+      autofocus
       class="form-control"
       placeholder="Comments"
       id="comments"
       name="comments"
       style="height: 200px"
-      value="TODO"
-    ></textarea>
+      value="{{ ticket.comments }}"
+    ></input>
     <label for="comments">Comments</label>
   </div>
   <button class="btn btn-primary" type="submit" name="action" value="update">
@@ -44,4 +61,4 @@ main %}
     Resolve
   </button>
 </form>
-{% endblock %}
+{% endfor %} {% endblock %}

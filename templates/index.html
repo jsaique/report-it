@@ -15,7 +15,9 @@ main %}
   <tbody>
     {% for ticket in tickets %}
     <tr>
-      <td>{{ ticket.id }}</td>
+      <td>
+        <a href="/update?ticket_id={{ ticket.id }}">{{ ticket.id }}</a>
+      </td>
       <td>{{ ticket.state.capitalize() }}</td>
       <td>{{ ticket.timestamp }}</td>
       <td>{{ ticket.issue }}</td>
