@@ -35,8 +35,11 @@ def after_request(response):
 def index():
     # Getting the data issue, description, comments
     tickets = db.execute("SELECT * FROM tickets")
+    # TODO need to get the id
+    users = db.execute("SELECT username FROM users WHERE id = ?", (session["user_id"],))
+    username = users[0]["username"].capitalize()
 
-    return render_template("index.html", tickets=tickets)
+    return render_template("index.html", tickets=tickets, username=username)
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -172,7 +175,7 @@ def create():
             comments=comments,
         )
 
-        flash(f"A ticket has been created!")
+        flash("A ticket has been created!")
         return redirect("/")
     else:
         return render_template("create.html")
@@ -207,7 +210,7 @@ def update():
 
         # Update the ticket's comments in the comments table
         db.execute(
-            "INSERT INTO comments (ticket_id, comment) VALUES ?",
+            "INSERT INTO comments (comment) VALUES (?)",
             (updated_comments),
         )
 
@@ -226,7 +229,7 @@ def update():
         # Redirect to the ticket details page or display a success message
         return redirect("/", ticket_id=ticket_id)
 
-    return render_template("update.html", tickets=tickets)
+    return render_template("update.html", tickets=tickets, comments=comments)
 
 
 @app.route("/closed")
@@ -239,4 +242,8 @@ def history():
     tickets = db.execute(
         "SELECT * FROM tickets WHERE user_id = :user_id", user_id=session["user_id"]
     )
-    return apology("TODO")
+
+    users = db.execute("SELECT username FROM users WHERE id = ?", (session["user_id"],))
+    username = users[0]["username"].capitalize()
+
+    return render_template("history.html", tickets=tickets, username=username)

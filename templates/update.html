@@ -20,7 +20,7 @@ main %}
     <label hidden for="ticket">Ticket</label>
   </div>
   <div class="form-floating mb-3">
-    <input
+    <textarea
       autocomplete="off"
       autofocus
       class="form-control"
@@ -29,7 +29,7 @@ main %}
       name="comments"
       style="height: 200px"
       value="{{ ticket.comments }}"
-    ></input>
+    ></textarea>
     <label for="comments">Comments</label>
   </div>
   <button class="btn btn-primary" type="submit" name="action" value="update">
@@ -39,4 +39,6 @@ main %}
     Resolve
   </button>
 </form>
+{% endfor %} {% for comment in comments %}
+<p>{{ comment.id }}</p>
 {% endfor %} {% endblock %}
