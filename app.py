@@ -34,12 +34,11 @@ def after_request(response):
 @login_required
 def index():
     # Getting the data issue, description, comments
-    tickets = db.execute("SELECT * FROM tickets")
-    # TODO need to get the id
-    users = db.execute("SELECT username FROM users WHERE id = ?", (session["user_id"],))
-    username = users[0]["username"].capitalize()
+    tickets = db.execute(
+        "SELECT tickets.*, users.username FROM tickets JOIN users ON tickets.user_id = users.id"
+    )
 
-    return render_template("index.html", tickets=tickets, username=username)
+    return render_template("index.html", tickets=tickets)
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -153,11 +152,11 @@ def logout():
 
 
 @app.route("/create", methods=["GET", "POST"])
+@login_required
 def create():
     if request.method == "POST":
         issue = request.form.get("issue")
         description = request.form.get("description")
-        comments = request.form.get("comments")
 
         # Check if input and textarea are blank
         if not issue:
@@ -168,11 +167,10 @@ def create():
 
         # Add the ticket to database
         db.execute(
-            "INSERT INTO tickets (user_id, issue, description, comments) VALUES (:user_id, :issue, :description, :comments)",
+            "INSERT INTO tickets (user_id, issue, description) VALUES (:user_id, :issue, :description)",
             user_id=session["user_id"],
             issue=issue,
             description=description,
-            comments=comments,
         )
 
         flash("A ticket has been created!")
@@ -182,6 +180,7 @@ def create():
 
 
 @app.route("/open", methods=["GET", "POST"])
+@login_required
 def open():
     # Getting the data issue, description, comments...
     tickets = db.execute(
@@ -192,14 +191,15 @@ def open():
 
 
 @app.route("/update", methods=["GET", "POST"])
+@login_required
 def update():
     if request.method == "GET":
         ticket_id = request.args.get("ticket_id")
         tickets = db.execute("SELECT * FROM tickets WHERE id = ?", (ticket_id,))
-        comments = db.execute(
-            "SELECT * FROM comments WHERE ticket_id = ?", (ticket_id,)
-        )
-        return render_template("update.html", tickets=tickets, comments=comments)
+        # comments = db.execute(
+        #     "SELECT * FROM comments WHERE ticket_id = ?", (ticket_id,)
+        # )
+        return render_template("update.html", tickets=tickets)
 
     action = request.form.get("action")
     ticket_id = request.form.get("ticket_id")
@@ -208,13 +208,17 @@ def update():
         # Get the updated issue, description, and comments from the form
         updated_comments = request.form.get("comments")
 
-        # Update the ticket's comments in the comments table
+        # Retrieve the ticket_id from the tickets table
+        ticket = db.execute("SELECT * FROM tickets WHERE id = ?", (ticket_id,))
+
         db.execute(
-            "INSERT INTO comments (comment) VALUES (?)",
-            (updated_comments),
+            "INSERT INTO comments (comment, ticket_id, user_id) VALUES (:comment, :ticket_id, :user_id)",
+            comment=updated_comments,
+            ticket_id=ticket,
+            user_id=session["user_id"],
         )
 
-        flash("Comment added!!")
+        flash("Comment added!")
         # Redirect to a success page or display a success message
         return redirect("/")
 
@@ -227,17 +231,24 @@ def update():
 
         flash("Ticket resolved!")
         # Redirect to the ticket details page or display a success message
-        return redirect("/", ticket_id=ticket_id)
+        return redirect("/")
 
-    return render_template("update.html", tickets=tickets, comments=comments)
+    return render_template("update.html", tickets=tickets)
 
 
 @app.route("/closed")
+@login_required
 def close():
-    return apology("TODO")
+    # Getting the data issue, description, comments...
+    tickets = db.execute(
+        "SELECT * FROM tickets WHERE user_id = :user_id", user_id=session["user_id"]
+    )
+
+    return render_template("closed.html", tickets=tickets)
 
 
 @app.route("/history")
+@login_required
 def history():
     tickets = db.execute(
         "SELECT * FROM tickets WHERE user_id = :user_id", user_id=session["user_id"]

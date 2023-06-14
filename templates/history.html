@@ -4,21 +4,21 @@ main %}
 <table class="table table-bordered table-hover table-stripped">
   <thead class="thead-light">
     <tr class="table-primary">
-      <td>Ticket</td>
-      <td>Created</td>
-      <td>Issue</td>
-      <td>Description</td>
-      <td>Status</td>
+      <th>Ticket</th>
+      <th>Created</th>
+      <th>Issue</th>
+      <th>Description</th>
     </tr>
   </thead>
   <tbody>
     {% for ticket in tickets %}
     <tr>
-      <td><a href="/update?ticket_id={{ ticket.id }}">{{ ticket.id }}</a></td>
+      <td>
+        <a href="/update?ticket_id={{ ticket.id }}">TKT-{{ ticket.id }}</a>
+      </td>
       <td>{{ ticket.timestamp }}</td>
       <td>{{ ticket.issue }}</td>
       <td>{{ ticket.description }}</td>
-      <td>{{ ticket.state.capitalize() }}</td>
     </tr>
     {% endfor %}
   </tbody>

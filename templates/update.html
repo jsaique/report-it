@@ -2,20 +2,18 @@
 main %}
 <h1>Update</h1>
 {% for ticket in tickets %}
-<h2>Ticket {{ticket.id}}</h2>
 <h2>{{ ticket.issue }}</h2>
 <h2>{{ ticket.description }}</h2>
-<form action="/update" class="container w-50" method="post">
+<form action="/update" class="container w-50 mb-3" method="post">
   <div class="form-floating mb-3">
     <input
       autocomplete="off"
       class="form-control"
       disabled
-      hidden
       id="ticket"
       name="ticket_id"
       type="text"
-      value="{{ ticket.id }}"
+      value="TKT-{{ ticket.id }}"
     />
     <label hidden for="ticket">Ticket</label>
   </div>
@@ -38,7 +36,25 @@ main %}
   <button class="btn btn-secondary" type="submit" name="action" value="resolve">
     Resolve
   </button>
+  <button class="btn btn-danger" type="submit" name="action" value="delete">
+    Delete
+  </button>
 </form>
-{% endfor %} {% for comment in comments %}
-<p>{{ comment.id }}</p>
-{% endfor %} {% endblock %}
+{% endfor %}
+<!-- <table class="table table-bordered table-hover table-stripped">
+  <thead class="thead-light">
+    <tr class="table-primary">
+      <th>Comments</th>
+      <th>Timestamp</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for comment in comments %}
+    <tr>
+      <td>{{ comment.comment }}</td>
+      <td>{{ comment.timestamp }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table> -->
+{% endblock %}

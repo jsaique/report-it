@@ -1,4 +1,26 @@
 {% extends 'layout.html' %} {% block title %} Closed {% endblock %} {% block
 main %}
-<h1>Hello</h1>
+<h1>Closed Tickets</h1>
+<table class="table table-bordered table-hover table-stripped">
+  <thead class="thead-light">
+    <tr class="table-primary">
+      <th>Ticket</th>
+      <th>Created</th>
+      <th>Issue</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for ticket in tickets %}
+    <tr>
+      <td>
+        <a href="/update?ticket_id={{ ticket.id }}">TKT-{{ ticket.id }}</a>
+      </td>
+      <td>{{ ticket.timestamp }}</td>
+      <td>{{ ticket.issue }}</td>
+      <td>{{ ticket.description }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 {% endblock %}
