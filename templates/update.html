@@ -2,21 +2,46 @@
 main %}
 <h1>Update</h1>
 {% for ticket in tickets %}
-<h2>{{ ticket.issue }}</h2>
-<h2>{{ ticket.description }}</h2>
+<h2>TKT-{{ ticket.id }}</h2>
 <form action="/update" class="container w-50 mb-3" method="post">
   <div class="form-floating mb-3">
     <input
       autocomplete="off"
       class="form-control"
       disabled
+      hidden
       id="ticket"
       name="ticket_id"
+      placeholder="Ticket"
       type="text"
-      value="TKT-{{ ticket.id }}"
+      value="{{ ticket.id }}"
     />
     <label hidden for="ticket">Ticket</label>
   </div>
+  <div class="form-floating mb-3">
+    <input
+      autocomplete="off"
+      class="form-control"
+      placeholder="Issue"
+      id="issue"
+      name="issue"
+      value="{{ ticket.issue }}"
+    ></input>
+    <label for="issue">Issue</label>
+  </div>
+
+  <div class="form-floating mb-3">
+    <input
+      autocomplete="off"
+      class="form-control"
+      placeholder="Description"
+      id="description"
+      name="description"
+      value="{{ ticket.description }}"
+    ></input>
+    <label for="description">Description</label>
+  </div>
+
   <div class="form-floating mb-3">
     <textarea
       autocomplete="off"
@@ -26,7 +51,6 @@ main %}
       id="comments"
       name="comments"
       style="height: 200px"
-      value="{{ ticket.comments }}"
     ></textarea>
     <label for="comments">Comments</label>
   </div>
@@ -35,9 +59,6 @@ main %}
   </button>
   <button class="btn btn-secondary" type="submit" name="action" value="resolve">
     Resolve
-  </button>
-  <button class="btn btn-danger" type="submit" name="action" value="delete">
-    Delete
   </button>
 </form>
 {% endfor %}

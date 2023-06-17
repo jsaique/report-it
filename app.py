@@ -167,10 +167,10 @@ def create():
 
         # Add the ticket to database
         db.execute(
-            "INSERT INTO tickets (user_id, issue, description) VALUES (:user_id, :issue, :description)",
-            user_id=session["user_id"],
-            issue=issue,
-            description=description,
+            "INSERT INTO tickets (user_id, issue, description) VALUES (?, ?, ?)",
+            session["user_id"],
+            issue,
+            description,
         )
 
         flash("A ticket has been created!")
@@ -183,9 +183,7 @@ def create():
 @login_required
 def open():
     # Getting the data issue, description, comments...
-    tickets = db.execute(
-        "SELECT * FROM tickets WHERE user_id = :user_id", user_id=session["user_id"]
-    )
+    tickets = db.execute("SELECT * FROM tickets WHERE user_id = ?", session["user_id"])
 
     return render_template("open.html", tickets=tickets)
 
@@ -196,42 +194,47 @@ def update():
     if request.method == "GET":
         ticket_id = request.args.get("ticket_id")
         tickets = db.execute("SELECT * FROM tickets WHERE id = ?", (ticket_id,))
-        # comments = db.execute(
-        #     "SELECT * FROM comments WHERE ticket_id = ?", (ticket_id,)
-        # )
+        print(ticket_id)
+
         return render_template("update.html", tickets=tickets)
 
-    action = request.form.get("action")
-    ticket_id = request.form.get("ticket_id")
+    elif request.method == "POST":
+        action = request.form.get("action")
 
-    if action == "update":
-        # Get the updated issue, description, and comments from the form
-        updated_comments = request.form.get("comments")
+        if action == "update":
+            # Fetching the form information
+            updated_issue = request.form.get("issue")
+            updated_description = request.form.get("description")
+            updated_comment = request.form.get("comment")
+            ticket_id = request.form.get("ticket_id")
 
-        # Retrieve the ticket_id from the tickets table
-        ticket = db.execute("SELECT * FROM tickets WHERE id = ?", (ticket_id,))
+            # Updating the issue and description
+            db.execute(
+                "UPDATE tickets SET issue = ?, description = ? WHERE id = ?",
+                (updated_issue, updated_description, ticket_id),
+            )
 
-        db.execute(
-            "INSERT INTO comments (comment, ticket_id, user_id) VALUES (:comment, :ticket_id, :user_id)",
-            comment=updated_comments,
-            ticket_id=ticket,
-            user_id=session["user_id"],
-        )
+            # Adding the comment
+            db.execute(
+                "INSERT INTO comments (comment, ticket_id, user_id) VALUES (?, ?, ?,)",
+                (updated_comment, ticket_id, session["user_id"]),
+            )
 
-        flash("Comment added!")
-        # Redirect to a success page or display a success message
-        return redirect("/")
+            flash("Ticket updated!")
+            return redirect("/")
 
-    elif action == "resolve":
-        # Update the ticket's state to 'close' in the database
-        db.execute(
-            "UPDATE tickets SET state = 'close' WHERE id = ?",
-            (ticket_id,),
-        )
+        elif action == "resolve":
+            # TODO
+            # # Update the ticket's state to 'close' in the database
+            # ticket_id = request.form["ticket_id"]
+            # db.execute(
+            #     "UPDATE tickets SET state = 'close' WHERE id = ?",
+            #     (ticket_id,),
+            # )
 
-        flash("Ticket resolved!")
-        # Redirect to the ticket details page or display a success message
-        return redirect("/")
+            flash("Ticket resolved!")
+            # Redirect to the ticket details page or display a success message
+            return redirect("/")
 
     return render_template("update.html", tickets=tickets)
 
@@ -239,10 +242,9 @@ def update():
 @app.route("/closed")
 @login_required
 def close():
+    # TODO
     # Getting the data issue, description, comments...
-    tickets = db.execute(
-        "SELECT * FROM tickets WHERE user_id = :user_id", user_id=session["user_id"]
-    )
+    tickets = db.execute("SELECT * FROM tickets WHERE user_id = ?", session["user_id"])
 
     return render_template("closed.html", tickets=tickets)
 
@@ -250,11 +252,9 @@ def close():
 @app.route("/history")
 @login_required
 def history():
-    tickets = db.execute(
-        "SELECT * FROM tickets WHERE user_id = :user_id", user_id=session["user_id"]
-    )
+    tickets = db.execute("SELECT * FROM tickets WHERE user_id = ?", session["user_id"])
 
-    users = db.execute("SELECT username FROM users WHERE id = ?", (session["user_id"],))
+    users = db.execute("SELECT username FROM users WHERE id = ?", session["user_id"])
     username = users[0]["username"].capitalize()
 
     return render_template("history.html", tickets=tickets, username=username)
