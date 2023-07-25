@@ -207,6 +207,11 @@ def update():
             updated_description = request.form.get("description")
             updated_comment = request.form.get("comment")
             ticket_id = request.form.get("ticket_id")
+            if ticket_id is not None:
+                ticket_id = int(ticket_id)
+            else:
+                flash("Ticket ID missing!")
+                return redirect("/")
 
             # Updating the issue and description
             db.execute(
